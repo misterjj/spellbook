@@ -1,0 +1,72 @@
+@import '~bootstrap';
+
+#app {
+  height: 100vh;
+  width: 100vw;
+}
+
+.tab-content {
+  overflow-y: auto;
+  min-height: 0;
+  .spell-item  {
+    cursor: zoom-in;
+    width: 250px;
+    height: 300px;
+    p {
+      font-size: 14px;
+      text-align: justify;
+      height: 200px;
+      overflow: hidden;
+      display: block;
+      .blur {
+        height: 50px;
+      }
+    }
+    .level {
+      color: #eeae01;
+    }
+  }
+}
+
+.spell-item {
+
+  &.big {
+    height: 100%;
+    width: 75vh;
+    margin-top: 0!important;
+
+    strong {
+      font-size: 24px;
+    }
+
+    p {
+      font-size: 24px;
+    }
+  }
+
+  &.opacity-50 {
+    opacity: .3;
+  }
+
+  p {
+    font-size: 14px;
+    text-align: justify;
+    height: 200px;
+    overflow: hidden;
+    display: block;
+    height: auto;
+  }
+
+  .level {
+    color: #eeae01;
+  }
+
+  .link {
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+}
+
+.bg-black-90 {
+  background: rgba(0,0,0,.9);
+}
