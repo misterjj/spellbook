@@ -40,7 +40,7 @@ const LockLaw: SpellLaw = {
             description: "Quand ce sort est lancé sur une serrure, il y a 20% de chances qu'une serrure normalement s'ouvre, et 45% de chances qu'une serrure magique s'ouvre (l'échec implique qu'il y a 10% de chances de déclencher des piège reliés). Les jets sont sans limites, et la qualité de la serrure peut modifier les jets"
         },
         {
-            UUID: "b939783f-16a3-420f-b1a0-96e0486945c0",
+            UUID: "56dd7032-1715-4e37-89de-c12f6bcdff54",
             level: 5,
             name: "Science des piège",
             duration: "_",
