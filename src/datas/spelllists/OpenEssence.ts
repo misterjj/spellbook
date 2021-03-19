@@ -9,7 +9,7 @@ import PhysicLaw from "../spelllaws/PhysicLaw";
 import ShieldLaw from "../spelllaws/ShieldLaw";
 
 const OpenEssence: SpellList = {
-    UUID: "a9a98d22-6cea-43ee-9b04-2774160c1fd8",
+    UUID: "f226ee95-6b45-46a6-ac50-d652c8b0cb42",
     name: "libre de l'essence",
     spellLaws : [
         HandLaw,

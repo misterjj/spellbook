@@ -3,7 +3,7 @@ import SpellLaw from "../../interfaces/SpellLaw"
 const RunesLaw: SpellLaw = {
     UUID: "4791140e-be46-4af8-ac50-f8676d4a50db",
     name: "Maitrise des Runes",
-    fontAwesomeIcon: "alipay",
+    fontAwesomeIcon: "signature",
     backgroundColor: [45, 45, 45],
     textColorClass: "light",
     spells: [

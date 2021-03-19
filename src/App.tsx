@@ -3,7 +3,7 @@ import CharacterStore from "./store/characterStore";
 import "../node_modules/@fortawesome/fontawesome-free/js/all";
 // @ts-ignore
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import SpellComponent from "./components/SpellComponent";
+import SpellComponent, {SpellCardDisplay} from "./components/SpellComponent";
 import SpellCard from "./interfaces/SpellCard";
 import SpellLaw from "./interfaces/SpellLaw";
 
@@ -18,7 +18,8 @@ interface AppState {
     flatSpellList: SpellCard[]
     learnedSpellUUIDS: string[]
     spellLaws: SpellLaw[],
-    SelectedSpellLawUUID?: string
+    selectedSpellLawUUID?: string,
+    spellCardDisplay: SpellCardDisplay,
     level: number,
     spellFocus?: string
     showMoreLevel: boolean
@@ -55,7 +56,8 @@ export default class App extends React.PureComponent<AppProps, AppState> {
             spellLaws,
             level: props.character.getLevel(),
             learnedSpellUUIDS: props.character.getLearnedSpellUUIDS(),
-            showMoreLevel: false
+            showMoreLevel: false,
+            spellCardDisplay: "full"
         }
 
         // On souscrit aux changements du store
@@ -86,7 +88,8 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                 <li className="nav-item">
                     <a className="nav-link active" aria-current="page" data-bs-toggle="tab" data-bs-target="#all-spell"
                        type="button" role="tab" aria-controls="home" aria-selected="true">
-                        Liste des sorts possible <span onClick={() => this.setState({showMoreLevel: !this.state.showMoreLevel})}>
+                        Liste des sorts possible <span
+                        onClick={() => this.setState({showMoreLevel: !this.state.showMoreLevel})}>
                             <FontAwesomeIcon
                                 icon={this.state.showMoreLevel ? "eye-slash" : "eye"}
                             />
@@ -100,29 +103,48 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                     </a>
                 </li>
                 <li className="position-absolute top-50 end-0 translate-middle-y">
-                    <span>Filtres : </span>
-                    {this.state.SelectedSpellLawUUID !== undefined &&
+                    <span>Affichage : </span>
+                    <span className="btn position-relative text-light"
+                          onClick={(e) => this.setState({spellCardDisplay: "full"})}>
+                        <FontAwesomeIcon icon="clipboard"
+                                         className="position-absolute top-50 start-50 translate-middle"/>
+                    </span>
+                    <span className="btn position-relative text-light"
+                          onClick={(e) => this.setState({spellCardDisplay: "light"})}>
+                        <FontAwesomeIcon icon="bars"
+                                         className="position-absolute top-50 start-50 translate-middle"/>
+                    </span>
+                    <span className="ms-5">Filtres : </span>
+                    {this.state.selectedSpellLawUUID !== undefined &&
                     <span className="btn position-relative p-3 ms-1 text-light"
-                          onClick={(e) => this.setState({SelectedSpellLawUUID: undefined})}>
+                          onClick={(e) => this.setState({selectedSpellLawUUID: undefined})}>
                             <FontAwesomeIcon icon="times-circle"
                                              className="position-absolute top-50 start-50 translate-middle"/>
                         </span>
                     }
-                    {this.state.spellLaws.map(
-                        spellLaw => <span
-                            key={"button-spelllaw-" + spellLaw.UUID}
-                            onClick={(e) => this.setState({SelectedSpellLawUUID: spellLaw.UUID})}
-                            className={"btn position-relative p-3 ms-1 text-" + spellLaw.textColorClass}
-                            title={spellLaw.name}
-                            style={
-                                {
-                                    background: "rgba(" + spellLaw.backgroundColor[0] + ", " + spellLaw.backgroundColor[1] + ", " + spellLaw.backgroundColor[2] + ", 1)"
-                                }
-                            }>
-                                <FontAwesomeIcon icon={spellLaw.fontAwesomeIcon}
-                                                 className="position-absolute top-50 start-50 translate-middle"/>
+                    {
+                        this.props.character.getSpellList().map(
+                            spellList =>
+                                <span key={spellList.UUID} className="position-relative ms-1 spellList" >
+                                    <span className="position-absolute top-0 start-0 spellList-name">{spellList.name}</span>
+                                    {spellList.spellLaws.map(
+                                        spellLaw => <span
+                                            key={"button-spelllaw-" + spellLaw.UUID}
+                                            onClick={(e) => this.setState({selectedSpellLawUUID: spellLaw.UUID})}
+                                            className={"btn position-relative p-3 ms-1 text-" + spellLaw.textColorClass}
+                                            title={spellLaw.name}
+                                            style={
+                                                {
+                                                    background: "rgba(" + spellLaw.backgroundColor[0] + ", " + spellLaw.backgroundColor[1] + ", " + spellLaw.backgroundColor[2] + ", 1)"
+                                                }
+                                            }>
+                                            <FontAwesomeIcon icon={spellLaw.fontAwesomeIcon}
+                                                             className="position-absolute top-50 start-50 translate-middle"/>
+                                        </span>
+                                    )}
                             </span>
-                    )}
+                        )
+                    }
                 </li>
             </ul>
             <div className="tab-content flex-grow-1" id="myTabContent">
@@ -133,8 +155,8 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                             .filter(
                                 spell =>
                                     (
-                                        this.state.SelectedSpellLawUUID === undefined ||
-                                        this.state.SelectedSpellLawUUID === spell.spellLawUUID
+                                        this.state.selectedSpellLawUUID === undefined ||
+                                        this.state.selectedSpellLawUUID === spell.spellLawUUID
                                     ) && (this.state.showMoreLevel || this.state.level >= spell.level)
                                     && !this.state.learnedSpellUUIDS.includes(spell.UUID)
                             )
@@ -155,6 +177,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                                         }}
                                         getSpellName={(UUID => this.getSpellName(UUID))}
                                         isOpacity={this.state.showMoreLevel && this.state.level < spell.level}
+                                        spellCardDisplay={this.state.spellCardDisplay}
                                     />
                                 }
                             )}
@@ -167,8 +190,8 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                             .filter(
                                 spell =>
                                     (
-                                        this.state.SelectedSpellLawUUID === undefined ||
-                                        this.state.SelectedSpellLawUUID === spell.spellLawUUID
+                                        this.state.selectedSpellLawUUID === undefined ||
+                                        this.state.selectedSpellLawUUID === spell.spellLawUUID
                                     )
                                     && this.state.learnedSpellUUIDS.includes(spell.UUID)
                             )
@@ -188,6 +211,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                                             this.setState({spellFocus: UUID})
                                         }}
                                         getSpellName={(UUID => this.getSpellName(UUID))}
+                                        spellCardDisplay={this.state.spellCardDisplay}
                                     />
                                 }
                             )}
@@ -215,9 +239,9 @@ export default class App extends React.PureComponent<AppProps, AppState> {
                             this.setState({spellFocus: UUID})
                         }}
                         getSpellName={(UUID => this.getSpellName(UUID))}
-                        isLearned={(UUID:string) => this.props.character.isLearnedSpell(UUID)}
-                        learn={(UUID:string) =>this.props.character.learnSpell(UUID)}
-                        forget={(UUID:string) =>this.props.character.forgetSpell(UUID)}
+                        isLearned={(UUID: string) => this.props.character.isLearnedSpell(UUID)}
+                        learn={(UUID: string) => this.props.character.learnSpell(UUID)}
+                        forget={(UUID: string) => this.props.character.forgetSpell(UUID)}
                     />
                 </div>
             </div>}
@@ -234,8 +258,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
         this.props.character.setLevel(parseInt(event.target.value))
     }
 
-    getSpellName(UUID: string): string
-    {
+    getSpellName(UUID: string): string {
         if (undefined === this.state) {
             return ''
         }
