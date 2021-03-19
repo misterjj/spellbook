@@ -5,6 +5,8 @@ import HandLaw from "../spelllaws/HandLaw";
 import RunesLaw from "../spelllaws/RunesLaw";
 import DetectionLaw from "../spelllaws/DetectionLaw";
 import LockLaw from "../spelllaws/LockLaw";
+import PhysicLaw from "../spelllaws/PhysicLaw";
+import ShieldLaw from "../spelllaws/ShieldLaw";
 
 const OpenEssence: SpellList = {
     UUID: "a9a98d22-6cea-43ee-9b04-2774160c1fd8",
@@ -16,6 +18,8 @@ const OpenEssence: SpellList = {
         RunesLaw,
         DetectionLaw,
         LockLaw,
+        PhysicLaw,
+        ShieldLaw,
     ]
 }
 
